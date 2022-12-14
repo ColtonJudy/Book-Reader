@@ -293,6 +293,8 @@ namespace Book_Reader
         public void DisplayPage(int pageNumber)
         {
             pageTextBlock.Text = pages[pageNumber];
+
+            pageCountLabel.Content = $"Page {currentPageNumber+1} of {pages.Count}";
         }
 
         //filters book titles by author selection
@@ -385,7 +387,7 @@ namespace Book_Reader
         //goes to the first page
         private void CurrentPage_Click(object sender, RoutedEventArgs e)
         {
-            if(pages != null)
+            if(pages != null && pages.Count > 0)
             {
                 DisplayPage(0);
                 currentPageNumber = 0;

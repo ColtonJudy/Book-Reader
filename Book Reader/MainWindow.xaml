@@ -67,8 +67,12 @@
         <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Grid.RowSpan="8" >
             <TextBlock x:Name="pageTextBlock" Background="White" Padding="10"/>
         </ScrollViewer>
-        <Button x:Name="prevPageButton" Grid.Column="2" Grid.Row="9" Width="100" HorizontalAlignment="Left" Content="&lt;-- Prev Page" Click="PrevPageButton_Click" Margin="5"/>
-        <Button x:Name="currentPage" Grid.Column="3" Grid.Row="9" Width="50" Content="Page 1" Click="CurrentPage_Click" Margin="5"/>
-        <Button x:Name="nextPageButton" Grid.Column="4" Grid.Row="9" Width="100" HorizontalAlignment="Right" Content="Next Page --&gt;" Click="NextPageButton_Click" Margin="5"/>
+
+        <StackPanel Grid.Column="2" Grid.Row="9" Orientation="Horizontal">
+            <Button x:Name="prevPageButton" Width="50" HorizontalAlignment="Left" Content="&lt;--" Click="PrevPageButton_Click" Margin="5"/>
+            <Button x:Name="currentPage" Width="50" HorizontalAlignment="Left" Content="Page 1" Click="CurrentPage_Click" Margin="5"/>
+            <Button x:Name="nextPageButton" Width="50" HorizontalAlignment="Left" Content="--&gt;" Click="NextPageButton_Click" Margin="5"/>
+        </StackPanel>
+        <Label x:Name="pageCountLabel" HorizontalAlignment="Right" Grid.Column="4" Grid.Row="9" Foreground="White" Margin="5"/>
     </Grid>
 </Window>
