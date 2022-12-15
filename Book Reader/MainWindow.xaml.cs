@@ -160,6 +160,11 @@ namespace Book_Reader
             linesPerPageListView.SelectedIndex = linesPerPage.IndexOf(20);
         }
 
+        public void ImportNewBook(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Import", "Import");
+        }
+
         //resets the screen
         public void ResetScreen(object sender, RoutedEventArgs e)
         {
@@ -207,6 +212,15 @@ namespace Book_Reader
         public void ExitProgram(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        //toggles dark mode
+        public void ToggleDarkMode(object sender, RoutedEventArgs e)
+        {
+            if (darkModeToggle.IsChecked)
+                MessageBox.Show("Dark Mode is now on", "Dark Mode");
+            else
+                MessageBox.Show("Dark Mode is now off", "Dark Mode");
         }
 
         //shows the about page

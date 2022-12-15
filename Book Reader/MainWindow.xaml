@@ -32,9 +32,13 @@
 
         <Menu Grid.ColumnSpan="5">
             <MenuItem Header="File">
+                <MenuItem Header="Import" Click="ImportNewBook"/>
                 <MenuItem Header="Reset Screen" Click="ResetScreen"/>
-                <MenuItem Header="See Book on Project Gutenberg" Click="LoadBookInBrowser"/>
+                <MenuItem Header="See Book on the Web" Click="LoadBookInBrowser"/>
                 <MenuItem Header="Exit" Click="ExitProgram"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem x:Name="darkModeToggle" Header="Dark Mode" IsCheckable="True" IsChecked="False" Click="ToggleDarkMode"/>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About" Click="About"/>
