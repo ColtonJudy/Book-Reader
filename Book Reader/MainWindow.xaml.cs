@@ -162,10 +162,12 @@ namespace Book_Reader
 
         public void ImportNewBook(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show("Import", "Import");
-
             var importWindow = new ImportWindow();
-            importWindow.ShowDialog();
+            if(importWindow.ShowDialog() == true)
+            {
+                MessageBox.Show($"{importWindow.bookTitle}\n{importWindow.bookAuthor}\n{importWindow.bookURL}\n{importWindow.bookPath}", "File Imported");
+            }
+
 
             //Here a custom dialog should prompt the user for the title, author, and url for the book.
             //Then the user should choose a file, which will be copied into the app resource folder.

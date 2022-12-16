@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,42 @@ namespace Book_Reader
     /// </summary>
     public partial class ImportWindow : Window
     {
+        public string bookTitle = "";
+        public string bookAuthor = "";
+        public string bookURL = "";
+        public string bookPath = "";
+
         public ImportWindow()
         {
             InitializeComponent();
+        }
+
+        private void OpenFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                bookPathTextbox.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void Import(object sender, RoutedEventArgs e)
+        {
+            bookTitle = bookTitleTextbox.Text;
+            bookAuthor = bookAuthorTextbox.Text;
+            bookURL = bookURLTextbox.Text;
+            bookPath = bookPathTextbox.Text;
+
+            //ADD ERROR HANDLING
+            DialogResult = true;
+            Close();
+        }
+
+        private void Cancel(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+            Close();
         }
     }
 }
