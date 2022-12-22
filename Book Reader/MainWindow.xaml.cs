@@ -34,14 +34,17 @@ namespace Book_Reader
             InitializeBookReader();
         }
 
-        List<string> bookTitles = new();
-        List<string> bookAuthors = new();
-        List<string> bookFileNames = new();
-        List<string> bookURLs = new();
+        public List<string> bookTitles = new();
+        public List<string> bookAuthors = new();
+        public List<string> bookFileNames = new();
+        public List<string> bookURLs = new();
 
         string[]? selectedBookContents;
         List<string> pages = new();
         int currentPageNumber = 0;
+
+        //default book location is in documents, to be updated
+        string resourceDirectory = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDoc‌​uments), @"Book Reader\Resources\");
 
         //initializes the book reader by loading all necessary data
         public void InitializeBookReader()
@@ -59,7 +62,7 @@ namespace Book_Reader
         //loads data from BOOK_INDEX.txt
         public void LoadBookData()
         {
-            string fileContents = LoadFile("BOOK_INDEX.txt");
+            string fileContents = LoadFileFromResources("BOOK_INDEX.txt");
 
             //seperate fileContents string by title, author, fileName, and URL
             StringReader stringReader = new(fileContents);
@@ -165,6 +168,38 @@ namespace Book_Reader
             var importWindow = new ImportWindow();
             if(importWindow.ShowDialog() == true)
             {
+                string fileName = System.IO.Path.GetFileName(importWindow.bookPath);
+
+                //copy file into resources directory
+                try
+                {
+                    File.Copy(importWindow.bookPath, resourceDirectory + fileName);
+                }
+                catch
+                {
+                    MessageBox.Show("Could not import file", "Error");
+                    return;
+                }
+
+                //append BOOK_INDEX.txt
+                using (StreamWriter sw = File.AppendText(resourceDirectory + "BOOK_INDEX.txt"))
+                {
+                    sw.WriteLine("\n" + importWindow.bookTitle);
+                    sw.WriteLine(importWindow.bookAuthor);
+                    sw.WriteLine(fileName);
+                    sw.WriteLine(importWindow.bookURL);
+                }
+
+                //reset and clear all loaded content
+                bookTitles = new List<string>();
+                bookAuthors = new List<string>();
+                bookFileNames = new List<string>();
+                bookURLs = new List<string>();
+                
+                LoadBookData();
+                LoadTitles(bookTitles);
+                LoadAuthors();
+
                 MessageBox.Show($"{importWindow.bookTitle}\n{importWindow.bookAuthor}\n{importWindow.bookURL}\n{importWindow.bookPath}", "File Imported");
             }
 
@@ -191,7 +226,7 @@ namespace Book_Reader
             pageTextBlock.Text = "";
 
             pageTextBlock.FontFamily = new FontFamily("Segoe UI");
-            pageTextBlock.FontSize = 12;
+            pageTextBlock.FontSize = 20;
             pageTextBlock.FontWeight = FontWeights.Normal;
 
             InitializeBookReader();
@@ -210,11 +245,18 @@ namespace Book_Reader
             int URLindex = bookTitles.IndexOf(currentBook);
             string URL = bookURLs[URLindex];
 
-            Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = URL,
-                UseShellExecute = true
-            });
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = URL,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
+                MessageBox.Show("Website Could Not Be Loaded", "Error");
+            }
         }
 
         //exits the program
@@ -252,7 +294,7 @@ namespace Book_Reader
             {
                 string fileName = bookFileNames[bookTitles.IndexOf(titlesListView.SelectedItem.ToString() ?? "")];
 
-                rawFileContents = LoadFile(fileName);
+                rawFileContents = LoadFileFromResources(fileName);
                 selectedBookContents = rawFileContents.Split("\n");
 
             }
@@ -263,28 +305,17 @@ namespace Book_Reader
         }
 
         //loads the file and returns the contents as a string
-        public static string LoadFile(string fileName)
+        public string LoadFileFromResources(string fileName)
         {
-            string fileContents;
-            var assembly = Assembly.GetExecutingAssembly();
-            var fileNames = assembly.GetManifestResourceNames();
-            var resourceName = fileNames.Single(str => str.EndsWith(fileName));
-            using (Stream? stream = assembly.GetManifestResourceStream(resourceName))
+            try
             {
-                if (stream != null)
-                {
-                    using (StreamReader reader = new(stream))
-                    {
-                        fileContents = reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    fileContents = "error opening file";
-                }
+                return File.ReadAllText(resourceDirectory + fileName);
             }
-
-            return fileContents;
+            catch
+            {
+                MessageBox.Show("Cannot Load File", "Error");
+                return "";
+            }
         }
 
         //converts the book contents into an array of pages based on linesPerPage

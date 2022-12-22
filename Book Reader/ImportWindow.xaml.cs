@@ -32,7 +32,7 @@ namespace Book_Reader
 
         private void OpenFile(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
@@ -47,9 +47,26 @@ namespace Book_Reader
             bookURL = bookURLTextbox.Text;
             bookPath = bookPathTextbox.Text;
 
-            //ADD ERROR HANDLING
-            DialogResult = true;
-            Close();
+            string errorMessage = "";
+
+            if (bookTitle == "")
+                errorMessage += "Please enter a valid title\n";
+            else if(((MainWindow)Application.Current.MainWindow).bookTitles.Contains(bookTitle))
+                errorMessage += "Title already exists in database, choose another title\n";
+            if (bookAuthor == "")
+                errorMessage += "Please enter a valid author\n";
+            if (bookPath == "")
+                errorMessage += "Please choose a file\n";
+
+            if (errorMessage == "")
+            {
+                DialogResult = true;
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(errorMessage, "Error");
+            }
         }
 
         private void Cancel(object sender, RoutedEventArgs e)
